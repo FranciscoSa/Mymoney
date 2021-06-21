@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /*=============================== Área De globais ===========================*/
 
@@ -38,45 +39,66 @@ struct meu_cofrinho dados_cofrinho;
 //Função criar bases de dados 
 void criar_bases_de_dados(){
     
-    FILE *base_dados_conta;
-    FILE *base_dados_renda;
-    FILE *base_dados_cofrinho;
+    FILE *base_dados;
     int contador = 0;
 
     //Verificando se a base de dados conta.bin caso não exista cria.
-    base_dados_conta = fopen(arquivo_conta,"rb");
+    base_dados = fopen(arquivo_conta,"rb");
     
-    if (base_dados_conta == NULL)//validando se a base de dados existe.
+    if (base_dados == NULL)//validando se a base de dados existe.
     {
         for (contador = 0; contador <= 50; contador++){//Preenchendo a matriz valor_da_conta para no futuro mapear os espaços com registros validos
             dados_contas.valor_da_conta[contador] = 0; 
         }
-        base_dados_conta = fopen(arquivo_conta,"wb");
-        fwrite(&dados_contas,sizeof(struct contas_a_pagar),1,base_dados_conta);
+        base_dados = fopen(arquivo_conta,"wb");
+        fwrite(&dados_contas,sizeof(struct contas_a_pagar),1,base_dados);
     }
-    fclose(base_dados_conta);
+    fclose(base_dados);
     
-    base_dados_renda = fopen(arquivo_renda,"rb");
-    if(base_dados_renda == NULL)
+    base_dados = fopen(arquivo_renda,"rb");
+    if(base_dados == NULL)
     {
         for(contador = 0; contador <= 50; contador++){
             dados_rendas.valor_da_renda[contador] = 0;
         }
-        base_dados_renda = fopen(arquivo_renda,"wb");
-        fwrite(&dados_rendas,sizeof(struct minhas_rendas),1,base_dados_renda);
+        base_dados = fopen(arquivo_renda,"wb");
+        fwrite(&dados_rendas,sizeof(struct minhas_rendas),1,base_dados);
     }
-    fclose(base_dados_renda);
+    fclose(base_dados);
 
-    base_dados_cofrinho = fopen(arquivo_cofrinho,"rb");
-    if(base_dados_cofrinho == NULL)
+    base_dados = fopen(arquivo_cofrinho,"rb");
+    if(base_dados == NULL)
     {
         for(contador = 0; contador <= 50; contador++){
             dados_cofrinho.valor_do_cofrinho[contador] = 0;
         }
-        base_dados_cofrinho = fopen(arquivo_cofrinho,"wb");
-        fwrite (&dados_cofrinho,sizeof(struct meu_cofrinho),1,base_dados_cofrinho);
+        base_dados = fopen(arquivo_cofrinho,"wb");
+        fwrite (&dados_cofrinho,sizeof(struct meu_cofrinho),1,base_dados);
     }
-    fclose(base_dados_cofrinho);
+    fclose(base_dados);
+}
+
+//Função salvar alteração na base de dados 
+void salvar_dados(char arquivo[50])
+{
+    FILE * base_dados;
+    
+    if(strcmp(arquivo, arquivo_conta) == 0 )
+    {
+        base_dados = fopen(arquivo_conta,"wb");
+        fwrite(&dados_contas, sizeof(struct contas_a_pagar), 1, base_dados);
+        fclose(base_dados);
+    }else if (strcmp(arquivo, arquivo_renda) == 0)
+    {
+        base_dados = fopen(arquivo_renda,"wb");
+        fwrite(&dados_rendas, sizeof(struct minhas_rendas), 1, base_dados);
+        fclose(base_dados);
+    }else if(strcmp(arquivo, arquivo_cofrinho) == 0)
+    {
+        base_dados = fopen(arquivo_cofrinho,"wb");
+        fwrite(&dados_cofrinho, sizeof(struct meu_cofrinho), 1, base_dados);
+        fclose(base_dados);
+    }
 }
 
 /*==================== Funções Tratativas contas a pagar ====================*/
@@ -101,6 +123,6 @@ void remover_conta(int id_conta){
 }
 
 int main (){
-    criar_bases_de_dados();
+    salvar_dados(arquivo_conta);
     return 0;
 }
