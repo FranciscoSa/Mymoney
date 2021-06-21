@@ -38,7 +38,7 @@ struct meu_cofrinho dados_cofrinho;
 
 //Função criar bases de dados 
 void criar_bases_de_dados(){
-    
+
     FILE *base_dados;
     int contador = 0;
 
@@ -105,7 +105,16 @@ void salvar_dados(char arquivo[50])
 
 //Função listar conta a pagar
 void listar_conta(){
-    
+    int contador = 0;
+    printf("\n--------------------------------------------------------------------------\n");
+    for (contador = 0; contador <= 50; contador++)
+    {
+        if (dados_contas.valor_da_conta[contador] != 0)
+        {
+            printf ("ID Conta: %d\nNome da Conta: %s\nVencimento: %s\nDescrição: %s\nValor: R$ %.2f",contador, dados_contas.nome_da_conta[contador], dados_contas.vencimento_da_conta[contador], dados_contas.descricao_da_conta[contador], dados_contas.valor_da_conta[contador]);
+            printf("\n--------------------------------------------------------------------------\n");
+        }
+    }
 }
 
 //Função adicionar conta a pagar
@@ -123,6 +132,9 @@ void remover_conta(int id_conta){
 }
 
 int main (){
-    salvar_dados(arquivo_conta);
+    dados_contas.valor_da_conta[0] = 2.4534;
+    dados_contas.valor_da_conta[1] = 1.454;
+    
+    listar_conta();
     return 0;
 }
