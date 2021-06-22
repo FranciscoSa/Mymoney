@@ -78,6 +78,29 @@ void criar_bases_de_dados(){
     fclose(base_dados);
 }
 
+//Funcão para carregar dados da base de dados para mémoria ram
+void carregar_dados(char arquivo[50])
+{
+    FILE * base_dados;
+    
+    if(strcmp(arquivo, arquivo_conta) == 0 )
+    {
+        base_dados = fopen(arquivo_conta,"rb");
+        fread(&dados_contas, sizeof(struct contas_a_pagar), 1, base_dados);
+        fclose(base_dados);
+    }else if (strcmp(arquivo, arquivo_renda) == 0)
+    {
+        base_dados = fopen(arquivo_renda,"rb");
+        fread(&dados_rendas, sizeof(struct minhas_rendas), 1, base_dados);
+        fclose(base_dados);
+    }else if(strcmp(arquivo, arquivo_cofrinho) == 0)
+    {
+        base_dados = fopen(arquivo_cofrinho,"rb");
+        fread(&dados_cofrinho, sizeof(struct meu_cofrinho), 1, base_dados);
+        fclose(base_dados);
+    }
+}
+
 //Função salvar alteração na base de dados 
 void salvar_dados(char arquivo[50])
 {
@@ -118,23 +141,50 @@ void listar_conta(){
 }
 
 //Função adicionar conta a pagar
-void adicionar_conta(char nome_da_conta [50][100], char vencimento_da_conta[50][11], char descricao_da_conta[50][300], float valor_da_conta[50]){
+void adicionar_conta(char nome_da_conta[100], char vencimento_da_conta[11], char descricao_da_conta[300], float valor_da_conta){
     
+    int contador = 0, id_gravar;
+    //Verificando qual espaço na base de dados esta fazio 
+    for (contador = 0; contador <= 50; contador++)
+    {
+        if (dados_contas.valor_da_conta[contador] == 0)
+        {
+            id_gravar = contador;
+            contador = 100;
+        }
+    }
+    strcpy(dados_contas.nome_da_conta[id_gravar], nome_da_conta);
+    strcpy(dados_contas.vencimento_da_conta[id_gravar], vencimento_da_conta);
+    strcpy(dados_contas.descricao_da_conta[id_gravar], descricao_da_conta);
+    dados_contas.valor_da_conta[id_gravar] = valor_da_conta;
+    salvar_dados(arquivo_conta);
 }
 
 //Função editar conta a pagar
-void editar_conta(char nome_da_conta [50][100], char vencimento_da_conta[50][11], char descricao_da_conta[50][300], float valor_da_conta[50]){
-    
+void editar_conta(int id_gravar, char nome_da_conta [100], char vencimento_da_conta[11], char descricao_da_conta[300], float valor_da_conta){
+    strcpy(dados_contas.nome_da_conta[id_gravar], nome_da_conta);
+    strcpy(dados_contas.vencimento_da_conta[id_gravar], vencimento_da_conta);
+    strcpy(dados_contas.descricao_da_conta[id_gravar], descricao_da_conta);
+    dados_contas.valor_da_conta[id_gravar] = valor_da_conta;
+    salvar_dados(arquivo_conta);
 }
 //Função remover conta a pagar
 void remover_conta(int id_conta){
-    
+    dados_contas.valor_da_conta[id_conta] = 0;
+    salvar_dados(arquivo_conta);
+}
+
+/*==================== void test ====================*/
+void teste (){
+    carregar_dados(arquivo_conta);
+    //adicionar_conta("internet","10/11/2021","conta do senai mano",23.2);
+    //adicionar_conta("cartão","10/11/2021","conta do senai mano",23.2);
+    //editar_conta(0,"luz","10/11/2021","conta do senai mano",123.2);
+    //remover_conta(1);
+    listar_conta();
 }
 
 int main (){
-    dados_contas.valor_da_conta[0] = 2.4534;
-    dados_contas.valor_da_conta[1] = 1.454;
-    
-    listar_conta();
+    teste();    
     return 0;
 }
