@@ -34,6 +34,17 @@ struct meu_cofrinho
 };
 struct meu_cofrinho dados_cofrinho;
 
+/*================ Prototipos de função ===============*/
+void criar_bases_de_dados();
+void carregar_dados(char arquivo[50]);
+void salvar_dados(char arquivo[50]);
+void listar_conta();
+void adicionar_conta(char nome_da_conta[100], char vencimento_da_conta[11], char descricao_da_conta[300], float valor_da_conta);
+void editar_conta(int id_gravar, char nome_da_conta [100], char vencimento_da_conta[11], char descricao_da_conta[300], float valor_da_conta);
+void remover_conta(int id_conta);
+void menu_principal();
+void menu_contas ();
+
 /*================ Funções Tratativas base de dados e arquivos ===============*/
 
 //Função criar bases de dados 
@@ -141,8 +152,8 @@ void listar_conta(){
 }
 
 //Função adicionar conta a pagar
-void adicionar_conta(char nome_da_conta[100], char vencimento_da_conta[11], char descricao_da_conta[300], float valor_da_conta){
-    
+void adicionar_conta(char nome_da_conta[100], char vencimento_da_conta[11], char descricao_da_conta[300], float valor_da_conta)
+{
     int contador = 0, id_gravar;
     //Verificando qual espaço na base de dados esta fazio 
     for (contador = 0; contador <= 50; contador++)
@@ -173,18 +184,51 @@ void remover_conta(int id_conta){
     dados_contas.valor_da_conta[id_conta] = 0;
     salvar_dados(arquivo_conta);
 }
+/*==================== Funções dos Menus ====================*/
 
-/*==================== void test ====================*/
-void teste (){
+//função menu principal (recursiva)
+void menu_principal(){
+
     carregar_dados(arquivo_conta);
-    //adicionar_conta("internet","10/11/2021","conta do senai mano",23.2);
-    //adicionar_conta("cartão","10/11/2021","conta do senai mano",23.2);
-    //editar_conta(0,"luz","10/11/2021","conta do senai mano",123.2);
-    //remover_conta(1);
-    listar_conta();
+    carregar_dados(arquivo_renda);
+    carregar_dados(arquivo_cofrinho);
+    
+    int controle_menu_principal = 0 ;    
+    
+    printf ("\n[ [1] - Contas a Pagar ] ");
+    printf ("[ [2] - Minha carteira ] ");
+    printf ("[ [3] - Meus Cofrinhos ] ");
+    printf ("[ [0] - Fechar programa ] \n");
+    scanf("%d",&controle_menu_principal);
+    switch (controle_menu_principal)
+    {
+        case 0 :
+            printf("Finalizando programa ...");
+            break;
+        case 1 :
+            menu_contas();
+            break;
+        case 2 :
+            break;
+        case 3 :
+            break;
+        default:
+            printf("\nOpção invalida !! \n");
+            break;
+        }
+    if (controle_menu_principal != 0 )
+    {
+        menu_principal();
+    }
 }
 
+void menu_contas ()
+{
+
+}
+/*==================== void test ====================*/
+
 int main (){
-    teste();    
+    menu_principal();
     return 0;
 }
