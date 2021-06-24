@@ -7,6 +7,7 @@
 #define arquivo_conta "conta.bin"
 #define arquivo_renda "renda.bin"
 #define arquivo_cofrinho "cofrinho.bin"
+int controle_menu_principal = 0 ;
 
 /*============================ Área para structs ============================*/
 
@@ -145,7 +146,7 @@ void listar_conta(){
     {
         if (dados_contas.valor_da_conta[contador] != 0)
         {
-            printf ("ID Conta: %d\nNome da Conta: %s\nVencimento: %s\nDescrição: %s\nValor: R$ %.2f",contador, dados_contas.nome_da_conta[contador], dados_contas.vencimento_da_conta[contador], dados_contas.descricao_da_conta[contador], dados_contas.valor_da_conta[contador]);
+            printf ("ID Conta: %d\nNome da Conta: %sVencimento: %s\nDescrição: %sValor: R$ %.2f",contador, dados_contas.nome_da_conta[contador], dados_contas.vencimento_da_conta[contador], dados_contas.descricao_da_conta[contador], dados_contas.valor_da_conta[contador]);
             printf("\n--------------------------------------------------------------------------\n");
         }
     }
@@ -192,18 +193,21 @@ void menu_principal(){
     carregar_dados(arquivo_conta);
     carregar_dados(arquivo_renda);
     carregar_dados(arquivo_cofrinho);
-    
-    int controle_menu_principal = 0 ;    
-    
-    printf ("\n[ [1] - Contas a Pagar ] ");
-    printf ("[ [2] - Minha carteira ] ");
-    printf ("[ [3] - Meus Cofrinhos ] ");
-    printf ("[ [0] - Fechar programa ] \n");
-    scanf("%d",&controle_menu_principal);
-    switch (controle_menu_principal)
+
+    int controle_menu = 0 ;
+
+    printf ("\n[1]  Contas a Pagar || ");
+    printf ("[2]  Minha carteira || ");
+    printf ("[3]  Meus Cofrinhos || ");
+    printf ("[0]  Fechar programa\n");
+    printf("\n");
+    printf(" ");
+    scanf("%d",&controle_menu);
+    switch (controle_menu)
     {
         case 0 :
-            printf("Finalizando programa ...");
+            printf("\nFinalizando programa ...\n");
+            controle_menu_principal = 0 ;
             break;
         case 1 :
             menu_contas();
@@ -216,19 +220,94 @@ void menu_principal(){
             printf("\nOpção invalida !! \n");
             break;
         }
-    if (controle_menu_principal != 0 )
-    {
-        menu_principal();
-    }
 }
-
 void menu_contas ()
 {
+    int controle_menu = 0, id_conta = 0; 
+    char nome_da_conta[100], vencimento_da_conta[11], descricao_da_conta[300]; 
+    float valor_da_conta;
 
+    do 
+    {
+        printf ("\n[1]  Listar Contas || ");
+        printf ("[2]  Cadastrar nova Conta || ");
+        printf ("[3]  Editar uma conta || ");
+        printf ("[4]  Remover uma conta || ");
+        printf ("[0]  Voltar para o meunu princical\n");
+        printf("\n");
+        printf(" ");
+        scanf("%d",&controle_menu);
+
+        switch (controle_menu)
+        {
+            case 0:
+                menu_principal();
+                break;
+            
+            case 1:
+                listar_conta();
+                break;
+            
+            case 2:
+
+                fflush(stdin);
+                printf("Insira um nome para a conta: ");
+                fgets(nome_da_conta,100,stdin);
+                fflush(stdin);
+                printf("Insira um vencimento para a conta (DD/MM/AAAA): ");
+                fgets(vencimento_da_conta,11,stdin);
+                fflush(stdin);
+                printf("Insira uma descrição para a conta: ");
+                fgets(descricao_da_conta,300,stdin);
+                fflush(stdin);
+                printf("Insira o valor da conta: ");
+                scanf("%f",&valor_da_conta);
+
+                adicionar_conta(nome_da_conta, vencimento_da_conta, descricao_da_conta, valor_da_conta);
+                break;
+            case 3:
+                listar_conta();
+                printf("\nInsira o ID da conta que deseja Editar: ");
+                scanf ("%d",&id_conta);
+                fflush(stdin);
+                printf("Insira um nome para a conta: ");
+                fgets(nome_da_conta,100,stdin);
+                fflush(stdin);
+                printf("Insira um vencimento para a conta (DD/MM/AAAA): ");
+                fgets(vencimento_da_conta,11,stdin);
+                fflush(stdin);
+                printf("Insira uma descrição para a conta: ");
+                fgets(descricao_da_conta,300,stdin);
+                fflush(stdin);
+                printf("Insira o valor da conta: ");
+                scanf("%f",&valor_da_conta);
+                editar_conta(id_conta,nome_da_conta, vencimento_da_conta, descricao_da_conta, valor_da_conta);
+                printf("\nConta ID %d editada com sucesso !!\n",id_conta);
+                break;
+            
+            case 4:
+                listar_conta();
+                printf("\nInsira o ID da conta que deseja remover: ");
+                scanf ("%d",&id_conta);
+                remover_conta(id_conta);
+                printf("\nConta ID %d removida com sucesso !!\n",id_conta);
+                break;
+            
+            default:
+                printf("\nOpção invalida !! \n");
+                break;
+    }
+
+    }while (controle_menu != 0);
+    
 }
 /*==================== void test ====================*/
 
 int main (){
-    menu_principal();
+    
+    do{
+        menu_principal();
+    }while(controle_menu_principal != 0);
+    
     return 0;
 }
